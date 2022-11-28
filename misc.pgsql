@@ -42,19 +42,17 @@ VALUES (3, 1, '2019-05-21 13:30:00.00-00');
 INSERT INTO "Show" (venue_id, artist_id, start_time)
 VALUES (5, 2, '2019-06-15T23:00:00.00-00');
 
-SET timezone = 'Asia/Calcutta';
 UPDATE "Show"
 SET start_time = '2019-05-22 21:30:00.00'
 WHERE id=1;
-SELECT timezone('America/Los_Angeles', start_time) FROM "Show";
-SELECT * FROM "Show"
+SELECT * FROM "Show";
 -- Check Data
 SELECT * FROM "Venue"
 GROUP BY id, state, city
 ORDER BY state;
 
 SELECT * FROM "Artist";
-SELECT * FROM "Show"
+SELECT * FROM "Show";
 
 SELECT timezone('America/New_York', '2020-06-22 19:10:25');
 
