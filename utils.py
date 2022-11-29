@@ -20,6 +20,13 @@ class Utils:
         ldict = [record._mapping for record in rows]
         return ldict
 
+    def convert_genres(strGenres):
+        listGenres = []
+        listGenres = (
+            strGenres.replace("{", "").replace("}", "").replace('"', "").split(",")
+        )
+        return listGenres
+
     def format_datetime(value, format="medium"):
         date = dateutil.parser.parse(value)
         if format == "full":

@@ -48,14 +48,15 @@ WHERE id=1;
 SELECT * FROM "Show";
 -- Check Data
 SELECT * FROM "Venue"
-GROUP BY id, state, city
-ORDER BY state;
+GROUP BY state, city, id
+ORDER BY state, city;
 
 SELECT * FROM "Artist";
 SELECT * FROM "Show";
 
 SELECT timezone('America/New_York', '2020-06-22 19:10:25');
 
-SELECT "Show".artist_id, "Show".start_time, "Artist".name, "Artist".image_link
+SELECT "Show".venue_id, "Show".artist_id, "Show".start_time, "Artist".name, "Artist".image_link, "Venue".id, "Venue".name
 FROM "Show"
-INNER JOIN "Artist" ON "Show".artist_id = "Artist".id;
+INNER JOIN "Artist" ON "Show".artist_id = "Artist".id
+INNER JOIN "Venue" ON "Show".venue_id = "Venue".id;

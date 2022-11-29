@@ -80,7 +80,10 @@
 </section>
 
 <a href="/venues/{{ venue.id }}/edit"><button class="btn btn-primary btn-lg">Edit</button></a>
-<button class="btn btn-danger btn-lg" onclick="deleteVenue(this)" value="{{venue.id}}">Delete</button>
+<button x="{{ venue.upcoming_shows_count + venue.past_shows_count }}" class="btn btn-danger btn-lg"
+	onclick="deleteVenue(this)" value="{{venue.id}}" {% if (venue.upcoming_shows_count + venue.past_shows_count)>0 %}
+	disabled {% endif
+	%} >Delete</button>
 <script>
 	function deleteVenue(e) {
 		console.log(e.value);
