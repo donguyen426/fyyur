@@ -454,17 +454,15 @@ def validate_phone_number(form, field):
             "Invalid phone number. Accepted formats: '6501112222' or '650-111-2222'"
         )
     elif code not in phone_area_codes:
-        raise ValidationError("Bad phone number. Area code does not exist")
+        raise ValidationError("Invalid area code")
     else:
         state = form.state.data
         if state.__ne__(phone_area_codes[code]):
-            raise ValidationError(
-                f"Phone number's area code does not belong to {state}"
-            )
+            raise ValidationError(f"Area code does not belong to {state}")
 
 
 def validate_facebook_link(form, field):
-    if "https://facebook.com" not in field.data:
+    if "https://www.facebook.com" not in field.data:
         raise ValidationError("Invalid Facebook link")
 
 

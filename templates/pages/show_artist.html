@@ -42,8 +42,7 @@
 		{% endif %}
 	</div>
 	<div class="col-sm-6">
-		<img {% if artist.image_link %} src="{{ artist.image_link }}" {% else %}
-			src="{{ url_for('static',filename='img/default_artist.png') }}" {% endif %} alt="Artist Image" />
+		<img src="{{ artist.image_link }}" alt="Artist Image" />
 	</div>
 </div>
 <section>

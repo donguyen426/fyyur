@@ -1,15 +1,10 @@
-from flask import Flask, Response, flash, redirect, render_template, request, url_for
+from flask import flash, redirect, render_template, request, url_for
 from models import *
 from forms import *
 
 from utils import Utils
 from datetime import datetime
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.sql.functions import coalesce
-
-
-ARTIST_DEFAULT_IMAGE = "https://www.kindpng.com/picc/m/596-5966450_rock-squad-outline-band-03-line-art-hd.png"
-VENUE_DEFAULT_IMAGE = "https://www.kindpng.com/picc/m/569-5695438_visuals-avatar-classical-trancelations-in-concert-helsinki-hd.png"
 
 # @app.route("/")
 def index():
@@ -19,7 +14,6 @@ def index():
 #  Venues
 #  ----------------------------------------------------------------
 
-# BACKLOG: to reimplement
 # @app.route("/venues")
 def venues():
     # TODO: replace with real venues data.
@@ -148,6 +142,66 @@ def show_venue(venue_id):
         "past_shows_count": 1,
         "upcoming_shows_count": 0,
     }
+    data2 = {
+        "id": 2,
+        "name": "The Dueling Pianos Bar",
+        "genres": ["Classical", "R&B", "Hip-Hop"],
+        "address": "335 Delancey Street",
+        "city": "New York",
+        "state": "NY",
+        "phone": "914-003-1132",
+        "website": "https://www.theduelingpianos.com",
+        "facebook_link": "https://www.facebook.com/theduelingpianos",
+        "seeking_talent": False,
+        "image_link": "https://images.unsplash.com/photo-1497032205916-ac775f0649ae?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80",
+        "past_shows": [],
+        "upcoming_shows": [],
+        "past_shows_count": 0,
+        "upcoming_shows_count": 0,
+    }
+    data3 = {
+        "id": 3,
+        "name": "Park Square Live Music & Coffee",
+        "genres": ["Rock n Roll", "Jazz", "Classical", "Folk"],
+        "address": "34 Whiskey Moore Ave",
+        "city": "San Francisco",
+        "state": "CA",
+        "phone": "415-000-1234",
+        "website": "https://www.parksquarelivemusicandcoffee.com",
+        "facebook_link": "https://www.facebook.com/ParkSquareLiveMusicAndCoffee",
+        "seeking_talent": False,
+        "image_link": "https://images.unsplash.com/photo-1485686531765-ba63b07845a7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=747&q=80",
+        "past_shows": [
+            {
+                "artist_id": 5,
+                "artist_name": "Matt Quevedo",
+                "artist_image_link": "https://images.unsplash.com/photo-1495223153807-b916f75de8c5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80",
+                "start_time": "2019-06-15T23:00:00.000Z",
+            }
+        ],
+        "upcoming_shows": [
+            {
+                "artist_id": 6,
+                "artist_name": "The Wild Sax Band",
+                "artist_image_link": "https://images.unsplash.com/photo-1558369981-f9ca78462e61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=794&q=80",
+                "start_time": "2035-04-01T20:00:00.000Z",
+            },
+            {
+                "artist_id": 6,
+                "artist_name": "The Wild Sax Band",
+                "artist_image_link": "https://images.unsplash.com/photo-1558369981-f9ca78462e61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=794&q=80",
+                "start_time": "2035-04-08T20:00:00.000Z",
+            },
+            {
+                "artist_id": 6,
+                "artist_name": "The Wild Sax Band",
+                "artist_image_link": "https://images.unsplash.com/photo-1558369981-f9ca78462e61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=794&q=80",
+                "start_time": "2035-04-15T20:00:00.000Z",
+            },
+        ],
+        "past_shows_count": 1,
+        "upcoming_shows_count": 1,
+    }
     # prepare return data
     venue = Utils.model_to_dict(Venue.query.get(venue_id)).copy()
     # query all upcoming shows and convert to proper data structure
@@ -161,6 +215,7 @@ def show_venue(venue_id):
         .join(Artist, Artist.id == Show.artist_id)
         .filter(Show.venue_id == venue_id)
         .filter(Show.start_time > datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        .order_by(Show.start_time)
         .all()
     )
     venue["upcoming_shows"] = Utils.lrow_to_ldict(upcoming_shows)
@@ -177,6 +232,7 @@ def show_venue(venue_id):
         .join(Artist, Artist.id == Show.artist_id)
         .filter(Show.venue_id == venue_id)
         .filter(Show.start_time <= datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        .order_by(Show.start_time.desc())
         .all()
     )
     venue["past_shows"] = Utils.lrow_to_ldict(past_shows)
@@ -536,7 +592,6 @@ def edit_artist(artist_id):
     return render_template("forms/edit_artist.html", form=form, artist=artist)
 
 
-# BACKLOG: need to test the bad data
 # @app.route("/artists/<int:artist_id>/edit", methods=["POST"])
 def edit_artist_submission(artist_id):
     # TODO: take values from the form submitted, and update existing
@@ -626,7 +681,8 @@ def shows():
         )
         .join(Venue, Venue.id == Show.venue_id)
         .join(Artist, Artist.id == Show.artist_id)
-        .order_by(Venue.id)
+        .order_by(Show.venue_id)
+        .order_by(Show.artist_id)
         .order_by(Show.start_time)
         .all()
     )

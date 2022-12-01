@@ -27,6 +27,3 @@ class Utils:
         elif format == "medium":
             format = "EE MM, dd, y h:mma"
         return babel.dates.format_datetime(date, format, locale="en")
-
-    def add_default_image(ldata):
-        return ldata
