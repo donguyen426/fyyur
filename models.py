@@ -42,7 +42,8 @@ class Artist(db.Model):
     city = Column(String(120))
     state = Column(String(120))
     phone = Column(String(120))
-    genres = Column(String(120))
+    # genres = Column(String(120))
+    genres = Column(ARRAY(String))
     image_link = Column(String(500))
     facebook_link = Column(String(120))
 

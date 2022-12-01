@@ -3,29 +3,22 @@ import dateutil.parser
 
 
 class Utils:
-    @staticmethod
     def model_to_dict(model):
+        """Convert a db.Model to a dict"""
         return {c.name: getattr(model, c.name) for c in model.__table__.columns}
 
-    @staticmethod
     def lmodel_to_ldict(models):
+        """Convert a list of db.Model to a list of dict"""
         array = []
         for model in models:
             array.append(Utils.model_to_dict(model))
         return array
 
-    @staticmethod
     def lrow_to_ldict(rows):
+        """Convert a list of SQLAlchemy rows to a list of dict"""
         ldict = []
         ldict = [record._mapping for record in rows]
         return ldict
-
-    def convert_genres(strGenres):
-        listGenres = []
-        listGenres = (
-            strGenres.replace("{", "").replace("}", "").replace('"', "").split(",")
-        )
-        return listGenres
 
     def format_datetime(value, format="medium"):
         date = dateutil.parser.parse(value)
@@ -34,3 +27,6 @@ class Utils:
         elif format == "medium":
             format = "EE MM, dd, y h:mma"
         return babel.dates.format_datetime(date, format, locale="en")
+
+    def add_default_image(ldata):
+        return ldata
